@@ -3,7 +3,7 @@ version: '3'
 services:
   whoami:
     image: traefik/whoami
-    restart: always
+    restart: unless-stopped
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
     logging:
