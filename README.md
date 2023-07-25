@@ -36,3 +36,11 @@ docker compose up -d --remove-orphans
 docker compose down <service-name>
 docker compose up -d <service-name>
 ```
+
+# DNS
+
+To make it easier to access containers add DNS A record to the internal server IP address with a wild card. Example:
+
+- Type: A
+- Domain: server.emadelsaid.com and *.server.emadelsaid.com
+- IP: `my server internal IP`
