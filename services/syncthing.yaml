@@ -1,0 +1,25 @@
+# syncthing takes about a minute for web UI to start responding
+# change UI password on first login
+version: "3"
+
+services:
+  syncthing:
+    image: syncthing/syncthing
+    restart: unless-stopped
+    labels:
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.home.emadelsaid.com`)"
+      - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
+    logging:
+      driver: journald
+    hostname: home
+    environment:
+      - PUID=0
+      - PGID=0
+    volumes:
+      - /home/docker/services/syncthing:/var/syncthing
+      - /home/docker/Pictures:/var/Pictures
+      - /home/docker/Documents:/var/Documents
+    ports:
+      - 22000:22000/tcp # TCP file transfers
+      - 22000:22000/udp # QUIC file transfers
+      - 21027:21027/udp # Receive local discovery broadcasts

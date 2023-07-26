@@ -4,3 +4,4 @@ include:
   - ./services/traefik.yaml
   - ./services/photoprism.yaml
   - ./services/assistant.yaml
+  - ./services/syncthing.yaml
