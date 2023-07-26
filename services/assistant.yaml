@@ -1,0 +1,17 @@
+# Copy ./assistant/configuration.yaml to /home/docker/services/assistant/
+version: '3'
+services:
+  assistant:
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    restart: unless-stopped
+    labels:
+      - "traefik.http.routers.assistant.rule=Host(`assistant.home.emadelsaid.com`)"
+    expose:
+      - "8123"
+    logging:
+      driver: journald
+    volumes:
+      - /home/docker/services/assistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"

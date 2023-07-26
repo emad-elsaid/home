@@ -33,7 +33,7 @@ services:
     image: photoprism/photoprism:latest
     restart: unless-stopped
     labels:
-      - "traefik.http.routers.whoami.rule=Host(`photos.home.emadelsaid.com`)"
+      - "traefik.http.routers.photoprism.rule=Host(`photos.home.emadelsaid.com`)"
     logging:
       driver: journald
     ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
@@ -95,14 +95,14 @@ services:
     ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
     # user: "1000:1000"
     ## Share hardware devices with FFmpeg and TensorFlow (optional):
-    devices:
+    # devices:
     #  - "/dev/dri:/dev/dri"                         # Intel QSV
-     - "/dev/nvidia0:/dev/nvidia0"                 # Nvidia CUDA
-     - "/dev/nvidiactl:/dev/nvidiactl"
-     - "/dev/nvidia-modeset:/dev/nvidia-modeset"
+    #  - "/dev/nvidia0:/dev/nvidia0"                 # Nvidia CUDA
+    #  - "/dev/nvidiactl:/dev/nvidiactl"
+    #  - "/dev/nvidia-modeset:/dev/nvidia-modeset"
     #  - "/dev/nvidia-nvswitchctl:/dev/nvidia-nvswitchctl"
-     - "/dev/nvidia-uvm:/dev/nvidia-uvm"
-     - "/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools"
+    #  - "/dev/nvidia-uvm:/dev/nvidia-uvm"
+    #  - "/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools"
     #  - "/dev/video11:/dev/video11"                 # Video4Linux Video Encode Device (h264_v4l2m2m)
     working_dir: "/photoprism" # do not change or remove
     ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
