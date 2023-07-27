@@ -13,5 +13,6 @@ services:
     volumes:
       - /home/docker/services/assistant:/config
       - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
     devices:
       - "/dev/ttyACM0:/dev/ttyACM0"

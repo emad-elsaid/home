@@ -1,6 +1,5 @@
 - name: System setup
   hosts: all
-  connection: local
 
   tasks:
     - community.general.timezone:
@@ -23,3 +22,5 @@
           - python
           - powertop
           - lm_sensors
+
+- import_playbook: ./services/assistant/playbook.yaml
