@@ -1,7 +1,7 @@
 Home Server Configuration
 ==================================
 
-This is a docker-compose configuration for my home server
+This is a docker-compose and ansible configuration for my home server
 
 # SSH config
 
@@ -44,3 +44,11 @@ To make it easier to access containers add DNS A record to the internal server I
 - Type: A
 - Domain: server.emadelsaid.com and *.server.emadelsaid.com
 - IP: `my server internal IP`
+
+# Ansible
+
+It installs host system configuration and requirements needed by the containers.
+
+```
+make ansible
+```

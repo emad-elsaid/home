@@ -1,0 +1,25 @@
+- name: System setup
+  hosts: all
+  connection: local
+
+  tasks:
+    - community.general.timezone:
+        name: Europe/Berlin
+
+    - become: true
+      ansible.builtin.service:
+        name:  systemd-timesyncd
+        enabled: yes
+        state: started
+
+    - become: true
+      community.general.pacman:
+        state: installed
+        name:
+          - base-devel
+          - rsync
+          - docker
+          - docker-compose
+          - python
+          - powertop
+          - lm_sensors
