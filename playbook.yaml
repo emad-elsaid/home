@@ -24,3 +24,4 @@
           - lm_sensors
 
 - import_playbook: ./services/assistant/playbook.yaml
+- import_playbook: ./services/grafana/playbook.yaml
