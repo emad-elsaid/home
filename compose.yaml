@@ -5,3 +5,4 @@ include:
   - ./services/photoprism.yaml
   - ./services/assistant/compose.yaml
   - ./services/syncthing.yaml
+  - ./services/kavita.yaml

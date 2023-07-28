@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  kavita:
+    image: kizaing/kavita:latest
+
+    restart: unless-stopped
+    logging:
+      driver: journald
+
+    labels:
+      - "traefik.http.routers.kavita.rule=Host(`books.home.emadelsaid.com`)"
+    volumes:
+      - /home/docker/Documents:/Documents
+      - /home/docker/services/kavita:/kavita/config
