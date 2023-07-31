@@ -12,6 +12,7 @@ services:
     logging:
       driver: journald
     hostname: home
+    network_mode: host
     environment:
       - PUID=0
       - PGID=0
