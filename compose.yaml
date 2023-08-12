@@ -7,3 +7,4 @@ include:
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
   - ./services/grafana/compose.yaml
+  - ./services/rsync/compose.yml

@@ -25,6 +25,13 @@ Everytime you want to switch the context use
 docker context use home
 ```
 
+# Environment variables
+docker compose files uses env variables if values are not set. to setup variables
+
+* copy `.env.template` to `.env`
+* edit `.env` to have the variables values
+* load the file as you normally do. for me I'm using [autoenv](https://github.com/hyperupcall/autoenv)
+
 # Deploy to remote server
 ```
 docker compose down
