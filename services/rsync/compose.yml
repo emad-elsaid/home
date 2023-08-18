@@ -10,6 +10,8 @@ services:
       - RSYNC_SRC
       - WAIT=3600
       - DST=/downloads
+      # delete backups older than 10 days
+      - BACKUPS_LIMIT=10
     volumes:
       - /home/docker/services/rsync/downloads:/downloads
       - /home/docker/services/rsync/ssh:/root/.ssh

@@ -12,5 +12,10 @@ echo "Public key: `cat /root/.ssh/*.pub`"
 while [ true ]
 do
     rsync --remove-source-files --append -azv $RSYNC_SRC $DST
+
+    # delete backups older than the limit
+    echo "Deleting old backup older than ${BACKUPS_LIMIT}"
+    find $DST -mtime +$BACKUPS_LIMIT -exec rm {} \;
+
     sleep $WAIT
 done
