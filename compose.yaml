@@ -6,5 +6,4 @@ include:
   - ./services/assistant/compose.yaml
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
-  - ./services/grafana/compose.yaml
   - ./services/rsync/compose.yml
