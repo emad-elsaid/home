@@ -1,6 +1,4 @@
 # Copied from https://dl.photoprism.app/docker/docker-compose.yml
-version: '3.5'
-
 # Example Docker Compose config file for PhotoPrism (Linux / AMD64)
 #
 # Note:
@@ -30,7 +28,7 @@ version: '3.5'
 services:
   photoprism:
     ## Use photoprism/photoprism:preview for testing preview builds:
-    image: photoprism/photoprism:latest
+    image: photoprism/photoprism:240711
     restart: unless-stopped
     labels:
       - "traefik.http.routers.photoprism.rule=Host(`photos.home.emadelsaid.com`)"

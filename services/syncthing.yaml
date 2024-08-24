@@ -1,10 +1,8 @@
 # syncthing takes about a minute for web UI to start responding
 # change UI password on first login
-version: "3"
-
 services:
   syncthing:
-    image: syncthing/syncthing
+    image: syncthing/syncthing:1.27
     restart: unless-stopped
     labels:
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.home.emadelsaid.com`)"

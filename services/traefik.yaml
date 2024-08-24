@@ -1,10 +1,7 @@
-# Copied from: https://doc.traefik.io/traefik/getting-started/quick-start/
-version: '3'
-
 services:
   traefik:
     # The official v2 Traefik docker image
-    image: traefik:v2.10
+    image: traefik:v3.1.2
     restart: unless-stopped
     # Enables the web UI and tells Traefik to listen to docker
     command: --api.insecure=true --providers.docker
