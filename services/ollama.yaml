@@ -1,0 +1,14 @@
+services:
+  ollama:
+    image: ollama/ollama:0.5.7
+    restart: unless-stopped
+    labels:
+      - "traefik.http.routers.ollama.rule=Host(`ollama.home.emadelsaid.com`)"
+      - "traefik.http.services.ollama.loadbalancer.server.port=11434"
+    hostname: ollama
+    logging:
+      driver: journald
+    volumes:
+      - /home/docker/services/ollama:/root/.ollama
+    ports:
+      - 11434:11434/tcp

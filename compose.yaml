@@ -5,3 +5,5 @@ include:
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
   - ./services/rsync/compose.yml
+  - ./services/ollama.yaml
+  - ./services/ai.yaml
