@@ -1,0 +1,13 @@
+services:
+  camera-sync:
+    build: .
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /home/docker/Pictures/SonyCamera:/sync
+      - /dev:/dev
+    cap_add:
+      - SYS_ADMIN
+      - SYS_RAWIO
+    security_opt:
+      - apparmor:unconfined
