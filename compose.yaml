@@ -8,3 +8,4 @@ include:
   - ./services/rsync/compose.yml
   - ./services/ollama.yaml
   - ./services/ai.yaml
+  - ./services/gitlab.yaml

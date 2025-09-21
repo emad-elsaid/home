@@ -1,8 +1,13 @@
 services:
   whoami:
-    image: traefik/whoami
+    image: org/image
     restart: unless-stopped
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.services.ai.loadbalancer.server.port=8080"
     logging:
       driver: journald
+    volumes:
+      - /home/docker/services/servicename:/path/inside/container
+    environment:
+      - 'VARIABLENAME=VARIABLEVALUE'
