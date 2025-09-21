@@ -1,6 +1,6 @@
 services:
   ollama:
-    image: ollama/ollama:0.5.7
+    image: ollama/ollama:0.12.0
     restart: unless-stopped
     labels:
       - "traefik.http.routers.ollama.rule=Host(`ollama.home.emadelsaid.com`)"
