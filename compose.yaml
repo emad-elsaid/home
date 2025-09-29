@@ -2,10 +2,8 @@ include:
   - ./services/traefik.yaml
   - ./services/photoprism.yaml
   - ./services/assistant/compose.yaml
-  - ./services/camera-sync/compose.yaml
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
-  - ./services/rsync/compose.yml
-  - ./services/ollama.yaml
+  # - ./services/ollama.yaml
   - ./services/ai.yaml
   - ./services/gitlab.yaml
