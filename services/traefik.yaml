@@ -4,7 +4,15 @@ services:
     image: traefik:v3.1.2
     restart: unless-stopped
     # Enables the web UI and tells Traefik to listen to docker
-    command: --api.insecure=true --providers.docker
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      # Define the 'web' entrypoint on port 80
+      - --entrypoints.web.address=:80
+      # Increase the readTimeout on 'web' to 5 minutes (300s) for large uploads
+      - --entrypoints.web.transport.respondingTimeouts.readTimeout=3000s
+      # Optional: Also set a very long write timeout
+      - --entrypoints.web.transport.respondingTimeouts.writeTimeout=3000s
     ports:
       # The HTTP port
       - "80:80"
