@@ -1,9 +1,6 @@
 include:
   - ./services/traefik.yaml
   - ./services/photoprism.yaml
-  - ./services/assistant/compose.yaml
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
-  # - ./services/ollama.yaml
-  - ./services/ai.yaml
   - ./services/gitlab.yaml
