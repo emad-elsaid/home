@@ -4,3 +4,4 @@ include:
   - ./services/syncthing.yaml
   - ./services/kavita.yaml
   - ./services/gitlab.yaml
+  - ./services/nextcloud.yaml
