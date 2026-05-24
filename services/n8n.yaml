@@ -1,0 +1,15 @@
+services:
+  n8n:
+    image: n8nio/n8n:2.22.2
+    restart: unless-stopped
+    hostname: 'n8n.home.emadelsaid.com'
+    labels:
+      - "traefik.http.routers.n8n.rule=Host(`n8n.home.emadelsaid.com`)"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+    logging:
+      driver: journald
+    environment:
+      - 'N8N_SECURE_COOKIE=false'
+    volumes:
+      - '/home/docker/services/n8n:/home/node/.n8n'
+

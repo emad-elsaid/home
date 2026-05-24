@@ -5,3 +5,4 @@ include:
   - ./services/kavita.yaml
   - ./services/gitlab.yaml
   - ./services/nextcloud.yaml
+  - ./services/n8n.yaml
