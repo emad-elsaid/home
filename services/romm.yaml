@@ -4,7 +4,11 @@
 # No host ports: Traefik routes romm.home's traffic to internal 8080, so it does not clash with Traefik's own :80.
 services:
   romm:
-    image: rommapp/romm:5.4.0
+    # Upstream image + one local fix, built from services/romm/Dockerfile
+    # (see that file: libretro-only matches used to lose the whole ROM).
+    image: romm:5.4.0-name-fallback
+    build:
+      context: ./romm
     restart: unless-stopped
     depends_on:
       romm-db:
@@ -23,7 +27,31 @@ services:
       - 'DB_USER=romm'
       - 'DB_PASSWD=${ROMM_DB_PASSWORD:?run make env to fetch deployment secrets}'
       - 'ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY:?run make env to fetch deployment secrets}'
+      # Metadata providers. Empty means disabled, so missing keys never block a deploy.
+      # IGDB keys come from a free app at https://dev.twitch.tv/console/apps
+      - 'IGDB_CLIENT_ID=${IGDB_CLIENT_ID:-}'
+      - 'IGDB_CLIENT_SECRET=${IGDB_CLIENT_SECRET:-}'
+      # ScreenScraper account from https://www.screenscraper.fr (free tier has a
+      # daily request quota, so scans that hit it crawl rather than fail)
+      - 'SCREENSCRAPER_USER=${SCREENSCRAPER_USER:-}'
+      - 'SCREENSCRAPER_PASSWORD=${SCREENSCRAPER_PASSWORD:-}'
+      # RetroAchievements web API key (profile -> Settings -> Keys). Matches by
+      # ROM hash, so it only helps where hashing already ran.
+      - 'RETROACHIEVEMENTS_API_KEY=${RETROACHIEVEMENTS_API_KEY:-}'
+      # SteamGridDB API key (account -> Preferences -> API). Artwork only, no
+      # names or descriptions, but it is first in the artwork priority list.
+      - 'STEAMGRIDDB_API_KEY=${STEAMGRIDDB_API_KEY:-}'
       - 'HASHEOUS_API_ENABLED=true'
+      # HowLongToBeat: no key or account needed, adds playtime estimates to
+      # games that are already identified (it does not identify anything).
+      - 'HLTB_API_ENABLED=true'
+      # PlayMatch: free public hash-matching service, no key needed.
+      - 'PLAYMATCH_API_ENABLED=true'
+      # Demoscene databases (no keys). They identify productions rather than
+      # retail games, so they only bite on titles that are also scene releases.
+      - 'DEMOZOO_API_ENABLED=true'
+      - 'POUET_API_ENABLED=true'
+      - 'CSDB_API_ENABLED=true'
       - 'SCAN_WORKERS=4'
       - 'WEB_SERVER_CONCURRENCY=4'
     volumes:
