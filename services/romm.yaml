@@ -1,0 +1,54 @@
+# RomM - self-hosted ROM manager/player.
+# Library: /home/emad/Games - platform folders sit directly at the root (arcade/, gba/, psx/...),
+# so config.yml on the server declares the custom structure template.
+# No host ports: Traefik routes romm.home's traffic to internal 8080, so it does not clash with Traefik's own :80.
+services:
+  romm:
+    image: rommapp/romm:5.4.0
+    restart: unless-stopped
+    depends_on:
+      romm-db:
+        condition: service_healthy
+        restart: true
+    hostname: 'games.home.emadelsaid.com'
+    labels:
+      - "traefik.http.routers.romm.rule=Host(`games.home.emadelsaid.com`)"
+      - "traefik.http.services.romm.loadbalancer.server.port=8080"
+    logging:
+      driver: journald
+    environment:
+      - 'ROMM_BASE_URL=http://games.home.emadelsaid.com'
+      - 'DB_HOST=romm-db'
+      - 'DB_NAME=romm'
+      - 'DB_USER=romm'
+      - 'DB_PASSWD=${ROMM_DB_PASSWORD:?run make env to fetch deployment secrets}'
+      - 'ROMM_AUTH_SECRET_KEY=${ROMM_AUTH_SECRET_KEY:?run make env to fetch deployment secrets}'
+      - 'HASHEOUS_API_ENABLED=true'
+      - 'SCAN_WORKERS=4'
+      - 'WEB_SERVER_CONCURRENCY=4'
+    volumes:
+      - '/home/emad/Games:/romm/library'
+      - '/home/docker/services/romm/config:/romm/config'
+      - '/home/docker/services/romm/assets:/romm/assets'
+      - '/home/docker/services/romm/resources:/romm/resources'
+      - '/home/docker/services/romm/redis:/redis-data'
+
+  romm-db:
+    image: mariadb:13.0.2
+    restart: unless-stopped
+    logging:
+      driver: journald
+    environment:
+      - 'MARIADB_ROOT_PASSWORD=${ROMM_DB_ROOT_PASSWORD:?run make env to fetch deployment secrets}'
+      - 'MARIADB_DATABASE=romm'
+      - 'MARIADB_USER=romm'
+      - 'MARIADB_PASSWORD=${ROMM_DB_PASSWORD:?run make env to fetch deployment secrets}'
+    volumes:
+      - '/home/docker/services/romm/db:/var/lib/mysql'
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      start_interval: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5

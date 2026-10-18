@@ -8,15 +8,18 @@ It contains service definitions, deployment configurations, and system provision
 ```
 /home/emad/code/home/
 ├── compose.yaml              # Main compose file (includes services)
+├── Makefile                  # make deploy / make env / make ansible
+├── .env                      # Gitignored: deployment secrets fetched from the server (never committed)
 ├── services/                 # Individual service definitions
 │   ├── template.yaml        # Service template
 │   ├── traefik.yaml         # Reverse proxy
-│   ├── photoprism.yaml      # Photo management
 │   ├── gitlab.yaml          # GitLab CE
-│   ├── syncthing.yaml       # File synchronization
 │   ├── kavita.yaml          # eBook reader
+│   ├── n8n.yaml             # Workflow automation
 │   ├── nextcloud.yaml       # Cloud storage and collaboration
-│   └── ftp.yaml             # FTP service
+│   ├── photoprism.yaml      # Photo management
+│   ├── romm.yaml            # ROM manager/player (library: /home/emad/Games)
+│   └── syncthing.yaml       # File synchronization
 ├── playbook.yaml            # Ansible system setup
 └── inventory                # Ansible inventory
 ```
@@ -26,7 +29,13 @@ It contains service definitions, deployment configurations, and system provision
 ### Docker Compose Operations
 
 ```bash
-# Deploy all services
+# Deploy all services (fetches deployment secrets from the server first)
+make deploy
+
+# Only refresh the local .env from the server
+make env
+
+# Deploy all services (equivalent to what make deploy runs)
 docker compose down
 docker compose up -d --remove-orphans
 
@@ -129,11 +138,23 @@ services:
         state: started
 ```
 
-### Environment Variables
+### Environment Variables & Secrets
 
-- **Embedded values:** Environment variables are embedded directly in service YAML files
-- **Format:** `- 'KEY=value'` within the `environment:` section
-- **No external files:** This repository does not use `.env` files; all configuration is in-service
+**This repository is public. Never commit secrets.**
+
+- **Default:** non-secret values are embedded directly in service YAML files, format `- 'KEY=value'` in the `environment:` section
+- **Secrets:** real secrets (passwords, API keys, app secret keys) live in one file on the server, `/home/docker/.env` (mode `0600`, owned by the deploy user). That file is the single source of truth; there is no `.env` in the repo
+- **Referencing them:** use a required-variable guard with a hint, so a missing value fails the deploy loudly instead of starting a container with an empty password:
+
+  ```yaml
+  environment:
+    - 'DB_PASSWD=${ROMM_DB_PASSWORD:?run make env to fetch deployment secrets}'
+  ```
+
+- **Loading:** `docker compose` interpolates `.env` on the machine running the command, **not** on the daemon host, so a server-side file is never read directly. `make env` copies `/home/docker/.env` into the local gitignored `.env`; `make deploy` does that, then deploys. That is what makes deploying from any machine work
+- **Adding a secret:** append `KEY=value` to `/home/docker/.env` on the server, then reference `${KEY:?...}` in the service YAML. Never put the value itself in the repo
+- **Stability:** a database password in `.env` must keep matching what the container was first initialised with (e.g. MariaDB's data volume). Changing it means recreating the database, not just editing the file
+- **Legacy:** some older services still embed credentials inline (e.g. nextcloud's `admin/admin`). Don't add more; move embedded secrets to the server `.env` when you touch those services
 
 ### File Organization
 

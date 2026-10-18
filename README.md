@@ -26,14 +26,22 @@ docker context use home
 ```
 
 # Environment variables
-docker compose files uses env variables if values are not set. to setup variables
 
-* copy `.env.template` to `.env`
-* edit `.env` to have the variables values
-* load the file as you normally do. for me I'm using [autoenv](https://github.com/hyperupcall/autoenv)
+Service secrets live on the server at `/home/docker/.env` - the single source of truth, never
+committed here. `make deploy` fetches them into the gitignored `.env` that docker compose reads,
+so deploying works from any machine. To just refresh them: `make env`.
 
 # Deploy to remote server
+
 ```
+make deploy
+```
+
+or manually:
+
+```
+make env
+docker context use home
 docker compose down
 docker compose up -d --remove-orphans
 ```
