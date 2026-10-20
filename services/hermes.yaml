@@ -1,0 +1,30 @@
+services:
+  hermes:
+    # Docker is the upstream-supported install; `hermes update` does not work here,
+    # updating means bumping this tag and recreating the container.
+    image: nousresearch/hermes-agent:v0.22.2
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    hostname: 'hermes.home.emadelsaid.com'
+    labels:
+      - "traefik.http.routers.hermes.rule=Host(`hermes.home.emadelsaid.com`)"
+      - "traefik.http.services.hermes.loadbalancer.server.port=9119"
+    logging:
+      driver: journald
+    volumes:
+      # All state: config.yaml, SOUL.md, sessions, memories, skills, cron, logs.
+      - '/home/docker/services/hermes:/opt/data'
+    environment:
+      # Image runs as this user and chowns the data dir on first boot.
+      - 'HERMES_UID=${HERMES_UID:-1000}'
+      - 'HERMES_GID=${HERMES_GID:-1000}'
+      # Keys from -e override /opt/data/.env, so secrets stay on the server only.
+      # `opencode-go` is a built-in Hermes provider and reads exactly this name.
+      - 'OPENCODE_GO_API_KEY=${HERMES_OPENCODE_KEY:?run make env to fetch deployment secrets}'
+      # Dashboard runs as a supervised s6 service next to the gateway on 9119.
+      # Any non-loopback bind fails closed unless an auth provider is configured.
+      - 'HERMES_DASHBOARD=1'
+      - 'HERMES_DASHBOARD_BASIC_AUTH_USERNAME=${HERMES_DASHBOARD_USERNAME:?run make env to fetch deployment secrets}'
+      - 'HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=${HERMES_DASHBOARD_PASSWORD:?run make env to fetch deployment secrets}'
+      # Keeps login sessions valid across restarts.
+      - 'HERMES_DASHBOARD_BASIC_AUTH_SECRET=${HERMES_DASHBOARD_SECRET:?run make env to fetch deployment secrets}'

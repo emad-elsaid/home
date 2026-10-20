@@ -7,3 +7,4 @@ include:
   - ./services/nextcloud.yaml
   - ./services/n8n.yaml
   - ./services/romm.yaml
+  - ./services/hermes.yaml
