@@ -1,6 +1,7 @@
 services:
   kavita:
-    image: kizaing/kavita:latest
+    # kizaing/kavita is abandoned (last push 2024-01); jvmilazz0 is the maintained repo.
+    image: jvmilazz0/kavita:0.9.1
 
     restart: unless-stopped
     logging:
