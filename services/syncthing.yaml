@@ -5,6 +5,7 @@ services:
     image: syncthing/syncthing:1.27
     restart: unless-stopped
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.syncthing.rule=Host(`syncthing.home.emadelsaid.com`)"
       - "traefik.http.services.syncthing.loadbalancer.server.port=8384"
     logging:

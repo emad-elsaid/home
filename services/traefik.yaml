@@ -3,23 +3,41 @@ services:
     # The official v2 Traefik docker image
     image: traefik:v3.1.2
     restart: unless-stopped
-    # Enables the web UI and tells Traefik to listen to docker
+    # :80 only redirects to :443, which terminates TLS with a Let's Encrypt
+    # wildcard cert obtained through the Cloudflare DNS challenge - no need to
+    # publish ports on individual services.
+    # Services must opt in with traefik.enable=true (exposedbydefault=false).
     command:
-      - --api.insecure=true
       - --providers.docker
-      # Define the 'web' entrypoint on port 80
+      - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
-      # Increase the readTimeout on 'web' to 5 minutes (300s) for large uploads
-      - --entrypoints.web.transport.respondingTimeouts.readTimeout=3000s
-      # Optional: Also set a very long write timeout
-      - --entrypoints.web.transport.respondingTimeouts.writeTimeout=3000s
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls.certresolver=le
+      # Long timeouts on the TLS entrypoint for large uploads (ROMs, videos)
+      - --entrypoints.websecure.transport.respondingTimeouts.readTimeout=3000s
+      - --entrypoints.websecure.transport.respondingTimeouts.writeTimeout=3000s
+      - --certificatesresolvers.le.acme.email=emad.elsaid.hamed@gmail.com
+      - --certificatesresolvers.le.acme.storage=/data/acme.json
+      - --certificatesresolvers.le.acme.dnschallenge=true
+      - --certificatesresolvers.le.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.le.acme.dnschallenge.resolvers=1.1.1.1:53,8.8.8.8:53
     ports:
-      # The HTTP port
       - "80:80"
-      # The Web UI (enabled by --api.insecure=true)
-      - "8080:8080"
+      - "443:443"
+    environment:
+      # Cloudflare DNS token for the ACME DNS challenge (zone edit only)
+      - 'CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN:?run make env to fetch deployment secrets}'
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
+      # acme.json holds the issued certs; losing it means re-issuing them
+      - 'traefik-acme:/data'
     logging:
       driver: journald
+
+volumes:
+  # Named volume keeps the same name (home_traefik-acme) as the live one
+  traefik-acme: {}

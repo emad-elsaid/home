@@ -4,6 +4,7 @@ services:
     restart: unless-stopped
     hostname: 'n8n.home.emadelsaid.com'
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.n8n.rule=Host(`n8n.home.emadelsaid.com`)"
       - "traefik.http.services.n8n.loadbalancer.server.port=80"
     logging:

@@ -3,6 +3,7 @@ services:
     image: org/image
     restart: unless-stopped
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
       - "traefik.http.services.ai.loadbalancer.server.port=8080"
     logging:

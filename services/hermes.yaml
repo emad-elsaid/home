@@ -7,6 +7,7 @@ services:
     command: ["gateway", "run"]
     hostname: 'hermes.home.emadelsaid.com'
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.hermes.rule=Host(`hermes.home.emadelsaid.com`)"
       - "traefik.http.services.hermes.loadbalancer.server.port=9119"
     logging:

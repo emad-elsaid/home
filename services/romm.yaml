@@ -6,7 +6,7 @@ services:
   romm:
     # Upstream image + one local fix, built from services/romm/Dockerfile
     # (see that file: libretro-only matches used to lose the whole ROM).
-    image: romm:5.4.0-name-fallback
+    image: romm:5.4.1-name-fallback
     build:
       context: ./romm
     restart: unless-stopped
@@ -16,6 +16,7 @@ services:
         restart: true
     hostname: 'games.home.emadelsaid.com'
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.romm.rule=Host(`games.home.emadelsaid.com`)"
       - "traefik.http.services.romm.loadbalancer.server.port=8080"
     logging:

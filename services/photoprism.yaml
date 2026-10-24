@@ -31,6 +31,7 @@ services:
     image: photoprism/photoprism:240711
     restart: unless-stopped
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.photoprism.rule=Host(`photos.home.emadelsaid.com`)"
     logging:
       driver: journald

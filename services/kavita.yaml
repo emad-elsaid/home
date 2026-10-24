@@ -8,6 +8,7 @@ services:
       driver: journald
 
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.kavita.rule=Host(`books.home.emadelsaid.com`)"
     volumes:
       - /home/docker/Documents:/Documents

@@ -6,7 +6,7 @@
 #
 # ponytail: delete this directory, drop `build:` from services/romm.yaml and
 # go back to `image: rommapp/romm:<version>` once a release contains the fix.
-FROM rommapp/romm:5.4.0
+FROM rommapp/romm:5.4.1
 
 COPY patch_name_fallback.py /tmp/patch_name_fallback.py
 RUN python3 /tmp/patch_name_fallback.py && rm /tmp/patch_name_fallback.py
