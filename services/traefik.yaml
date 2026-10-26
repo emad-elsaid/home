@@ -3,9 +3,9 @@ services:
     # The official v2 Traefik docker image
     image: traefik:v3.1.2
     restart: unless-stopped
-    # :80 only redirects to :443, which terminates TLS with a Let's Encrypt
-    # wildcard cert obtained through the Cloudflare DNS challenge - no need to
-    # publish ports on individual services.
+    # :80 only redirects to :443, which terminates TLS with Let's Encrypt certs
+    # (issued per Host via the Cloudflare DNS challenge) - no need to publish
+    # ports on individual services.
     # Services must opt in with traefik.enable=true (exposedbydefault=false).
     command:
       - --providers.docker

@@ -15,7 +15,14 @@ services:
       driver: journald
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://gitlab.home.emadelsaid.com'
+        external_url 'https://gitlab.home.emadelsaid.com'
+        # TLS terminates at Traefik, so the bundled nginx only serves plain HTTP
+        # on :80 and never asks Let's Encrypt for its own certificate.
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        letsencrypt['enable'] = false
+        # Requests always arrive from Traefik's container, not the browser.
+        gitlab_rails['trusted_proxies'] = ['172.16.0.0/12']
         gitlab_rails['gitlab_shell_ssh_port'] = 2424
         # Omnibus defaults to one Puma worker per core (12 here, ~1.4GB each).
         puma['worker_processes'] = 3

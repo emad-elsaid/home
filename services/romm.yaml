@@ -22,7 +22,7 @@ services:
     logging:
       driver: journald
     environment:
-      - 'ROMM_BASE_URL=http://games.home.emadelsaid.com'
+      - 'ROMM_BASE_URL=https://games.home.emadelsaid.com'
       - 'DB_HOST=romm-db'
       - 'DB_NAME=romm'
       - 'DB_USER=romm'
